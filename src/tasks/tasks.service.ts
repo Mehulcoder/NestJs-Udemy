@@ -30,4 +30,25 @@ export class TasksService {
         this.tasks.push(task);
         return task;
     }
+
+    deleteTask(id:string):Task[] {
+        this.tasks = this.tasks.filter((task) => {
+            return task.id !== id;
+        })
+
+        return this.tasks;
+    }
+
+    updateTaskStatus(id: string, status:TaskStatus){
+        let index = this.tasks.findIndex((task) => {
+            return task.id === id;
+        })
+        if (index!=-1) {
+            this.tasks[index].status = status;
+            return this.tasks[index];    
+        }
+
+        throw new Error("Task not found");
+        
+    }
 }
