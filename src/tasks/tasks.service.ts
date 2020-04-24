@@ -57,27 +57,23 @@ export class TasksService {
         return this.taskRepository.createTask(CreateTaskDto);
     }
 
-    // // SECTION - This is the delete
-    // deleteTask(id:string):Task[] {
-    //     const found = this.getTaskById(id);
+    // SECTION - This is the delete
+    async deleteTask(id:number) {
+        const result = await this.taskRepository.delete(id);
 
-    //     this.tasks = this.tasks.filter((task) => {
-    //         return task.id !== found.id;
-    //     })
-    //     return this.tasks;
-    // }
+        if (result.affected === 0) {
+            throw new NotFoundException("The task not found");
+        }
+        return result;
+
+    }
 
     // // SECTION - This has patch requests
-    // updateTaskStatus(id: string, status:TaskStatus){
-    //     let index = this.tasks.findIndex((task) => {
-    //         return task.id === id;
-    //     })
-    //     if (index!=-1) {
-    //         this.tasks[index].status = status;
-    //         return this.tasks[index];    
-    //     }
-
-    //     throw new NotFoundException(`Task with ID: ${id} not found!`);
+    async updateTaskStatus(id: number, status:TaskStatus){
+        const task = await this.getTaskById(id);
+        task.status = status;
+        task.save();
+        return task;
         
-    // }
+    }
 }
